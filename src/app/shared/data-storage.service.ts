@@ -3,11 +3,15 @@ import {HttpClient} from '@angular/common/http';
 import {RecipeService} from '../recipes/recipe.service';
 import {Recipe} from '../recipes/recipe.model';
 import {map, tap} from 'rxjs/operators';
+import {AuthService} from '../auth/auth.service';
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
-  constructor(private http: HttpClient, private recipeService: RecipeService) {
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeService) {
   }
+
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
@@ -22,17 +26,14 @@ export class DataStorageService {
    * Recipes will return an empty array of ingredients if no ingredients are added by user
    */
   fetchRecipes() {
-    return this.http
-      .get<Recipe[]>('https://angular-recipebook-d291b-default-rtdb.firebaseio.com/recipes.json')
-      .pipe(
-        map((recipe) => {
-          return recipe
-            .map(recipe => {
-              return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []};
-            });
-        }), tap(recipes => {
-          this.recipeService.updateRecipes(recipes);
-        }));
+    return this.http.get<Recipe[]>('https://angular-recipebook-d291b-default-rtdb.firebaseio.com/recipes.json')
+      .pipe(map(recipes => {
+        return recipes.map(recipe => {
+          return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []};
+        });
+      }), tap(recipes => {
+        this.recipeService.updateRecipes(recipes);
+      }));
   }
 
 
