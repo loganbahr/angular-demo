@@ -14,25 +14,27 @@ export class RecipeService {
   constructor(private shoppingListService: ShoppingListService) {
   }
 
-  private recipes: Recipe[] = [
-    new Recipe(
-      'Burger',
-      'A nice cheeseburger.',
-      'https://iambaker.net/wp-content/uploads/2019/05/cheeseburger-1.jpg',
-      [new Ingredient('Buns', 2), new Ingredient('Meat', 1)]
-    ),
-    new Recipe(
-      'Hotdog',
-      'A nice hotdog.',
-      'https://upload.wikimedia.org/wikipedia/commons/f/fb/Hotdog_-_Evan_Swigart.jpg',
-      [
-        new Ingredient('Bun', 1),
-        new Ingredient('Ketchup', 1),
-        new Ingredient('Mustard', 1),
-        new Ingredient('Sausage', 1),
-      ]
-    ),
-  ];
+  private recipes: Recipe[] = [];
+
+  // private recipes: Recipe[] = [
+  //   new Recipe(
+  //     'Burger',
+  //     'A nice cheeseburger.',
+  //     'https://iambaker.net/wp-content/uploads/2019/05/cheeseburger-1.jpg',
+  //     [new Ingredient('Buns', 2), new Ingredient('Meat', 1)]
+  //   ),
+  //   new Recipe(
+  //     'Hotdog',
+  //     'A nice hotdog.',
+  //     'https://upload.wikimedia.org/wikipedia/commons/f/fb/Hotdog_-_Evan_Swigart.jpg',
+  //     [
+  //       new Ingredient('Bun', 1),
+  //       new Ingredient('Ketchup', 1),
+  //       new Ingredient('Mustard', 1),
+  //       new Ingredient('Sausage', 1),
+  //     ]
+  //   ),
+  // ];
 
   getRecipes() {
     // slice() returns a copy of the array, not the array itself (which is a reference type)
@@ -54,6 +56,11 @@ export class RecipeService {
 
   updateRecipe(index: number, newRecipe: Recipe) {
     this.recipes[index] = newRecipe;
+    this.recipesChanged.next(this.recipes.slice());
+  }
+
+  updateRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
     this.recipesChanged.next(this.recipes.slice());
   }
 
